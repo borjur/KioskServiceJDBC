@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://www.springframework.org/schema/beans
+  http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
+
+    <!-- Define The Datasource Bean
+      'org.springframework.jdbc.datasource.DriverManagerDataSource'
+    -->
+	<bean id="Datasource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <!-- The driverClassName has been defined as an entry in a properties file.
+           Define the value as '${jdbc.driver}'
+        -->
+		<property name="driverClassName" value="${jdbc.driver}" />
+
+
+        <!-- The url has been defined as an entry in a properties file.
+           Define the value as '${jdbc.url}'
+        -->
+		<property name="url" value="${jdbc.url}"/>
+
+
+        <!-- The username has been defined as an entry in a properties file.
+           Define the value as '${jdbc.username}'
+        -->
+		<property name="username" value="${jdbc.username}"/>
+
+
+        <!-- The password has been defined as an entry in a properties file.
+           Define the value as '${jdbc.password}'
+        -->
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+
+    <!-- Inject the dataSource into the DAO classes, using setter injection -->
+    <bean id="AirportLocationDAO" class="springjdbc.dao.jdbc.AirportLocationDAOImpl">
+    	<property name="dataSource" ref="Datasource"/>
+    </bean>
+
+    <bean id="DVDInfoDAO" class="springjdbc.dao.jdbc.DVDInfoDAOImpl">
+    	<property name="dataSource" ref="Datasource"/>
+    </bean>
+
+    <bean id="DVDLocationDAO" class="springjdbc.dao.jdbc.DVDLocationDAOImpl">
+    	<property name="dataSource" ref="Datasource"/>
+    </bean>
+
+    <bean id="LoanDAO" class="springjdbc.dao.jdbc.LoanDAOImpl">
+    	<property name="dataSource" ref="Datasource"/>
+    </bean>
+
+    <bean id="MemberDAO" class="springjdbc.dao.jdbc.MemberDAOImpl"/>
+
+
+    <bean id="KioskService" class="springjdbc.bo.KioskServiceImpl">
+        <constructor-arg>
+            <bean factory-bean="AirportLocationDAO" factory-method="getLocationByID">
+                <constructor-arg>
+                    <value>AMS-LC0</value>
+                </constructor-arg>
+            </bean>
+        </constructor-arg>
+        <property name="dvdInfoDAO" ref="DVDInfoDAO"/>
+        <property name="dvdLocationDAO" ref="DVDLocationDAO"/>
+        <property name="loanDAO" ref="LoanDAO"/>
+        <property name="memberDAO" ref="MemberDAO"/>
+    </bean>
+
+    <bean id="PropertyConfig"
+          class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="location" 
+                  value="springjdbc/KioskServiceJDBC.properties" />
+    </bean>
+</beans>
