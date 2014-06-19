@@ -12,7 +12,7 @@ import springjdbc.dao.MemberDAO;
 import java.util.Date;
 import java.util.List;
 
-
+//Kiosk template
 public class KioskServiceImpl implements KioskService {
     private AirportLocation airportLocation;
     private DVDInfoDAO dvdInfoDAO;
